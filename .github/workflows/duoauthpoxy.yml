@@ -1,0 +1,22 @@
+name: build_duoauthproxy
+run-name: Deploy to ${{ inputs.deploy_target }} by @${{ github.actor }}
+
+defaults:
+  run:
+    shell: bash
+    working-directory: /tmp
+
+on:
+  push:
+    paths:
+    - 'duoauthpoxy/**'
+#   tags:
+#     - '[0-9]+.[0-9]+.[0-9]+'
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  docker:
+    runs
