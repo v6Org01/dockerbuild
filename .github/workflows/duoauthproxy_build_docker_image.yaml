@@ -3,7 +3,6 @@ name: duoauthproxy - build_docker_image
 env:
   GIT_SUBDIR: duoauthproxy
   REGISTRY: pcr.jlv6.com:443
-  IMAGE_NAME: ${{ env.GIT_SUBDIR }}
   
 on:
   workflow_run:
@@ -18,7 +17,7 @@ concurrency:
 
 jobs:
   build-image:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }} && ${{ vars.DUO_NEW_VERSION_FOUND == "true" }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} && ${{ vars.DUO_NEW_VERSION_FOUND }} == "true"
     runs-on: [self-hosted, X64]
     steps:
       - name: checkout
@@ -37,7 +36,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: "${{ env.REGISTRY }}/arc-${{ env.IMAGE_NAME }}"
+          images: "${{ env.REGISTRY }}/arc-${{ env.GIT_SUBDIR }}"
       - name: build and push
         uses: docker/build-push-action@v5
         with:
@@ -45,5 +44,5 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: |
-            "${{ env.REGISTRY }}/arc-${{ env.IMAGE_NAME }}:latest"
-            "${{ env.REGISTRY }}/arc-${{ env.IMAGE_NAME }}:{{ vars.DUO_VERSION }}"
+            "${{ env.REGISTRY }}/arc-${{ env.GIT_SUBDIR }}:latest"
+            "${{ env.REGISTRY }}/arc-${{ env.GIT_SUBDIR }}:{{ vars.DUO_VERSION }}"
