@@ -3,6 +3,7 @@ name: duoauthproxy - check_for_new_version
 on:
   schedule:
     - cron: "0 0 * * *"
+  workflow_dispatch  # allows for triggering workflow manually.
 
 concurrency:
   group: ${{ github.workflow }}
