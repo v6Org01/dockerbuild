@@ -20,10 +20,10 @@ jobs:
 
           if [ "$latest_version" != "${{ env.DUO_PREVIOUS_VERSION }}" ]; then
             echo "New version found: $latest_version"
-            echo "::set-env name=DUO_NEW_VERSION_FOUND::true"
-            echo "::set-env name=DUO_PREVIOUS_VERSION::${{ env.DUO_LATEST_VERSION }}"
-            echo "::set-env name=DUO_LATEST_VERSION::$latest_version"           
+            echo "DUO_NEW_VERSION_FOUND=true" >> $GITHUB_ENV
+            echo "DUO_PREVIOUS_VERSION=${{ env.DUO_LATEST_VERSION }}" >> $GITHUB_ENV
+            echo "DUO_LATEST_VERSION=$latest_version" >> $GITHUB_ENV           
           else
             echo "No new version found."
-            echo "::set-env name=DUO_NEW_VERSION_FOUND::false"
+            echo "DUO_NEW_VERSION_FOUND=false" >> $GITHUB_ENV
           fi
