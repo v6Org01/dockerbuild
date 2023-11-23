@@ -1,4 +1,4 @@
-name: duoauthproxy - build_image
+name: duoauthproxy - build_docker_image
 
 env:
   GIT_SUBDIR: duoauthproxy
