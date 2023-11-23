@@ -19,11 +19,10 @@ jobs:
 
           if [ "$latest_version" != "${{ env.DUO_PREVIOUS_VERSION }}" ]; then
             echo "New version found: $latest_version"
-            echo "::set-output name=new_version::true"
+            echo "::set-env name=DUO_NEW_VERSION_FOUND::true"
             echo "::set-env name=DUO_PREVIOUS_VERSION::${{ env.DUO_LATEST_VERSION }}"
-            echo "::set-env name=DUO_LATEST_VERSION::$latest_version"
-            exit 78 # Custom exit code indicating neutral status            
+            echo "::set-env name=DUO_LATEST_VERSION::$latest_version"           
           else
             echo "No new version found."
-            exit 0 # Exit with success
+            echo "::set-env name=DUO_NEW_VERSION_FOUND::false"
           fi
