@@ -13,7 +13,7 @@ on:
 
 jobs:
   build-image:
-    if: ${{ env.DUO_NEW_VERSION_FOUND }} == 'true'
+    if: ${{ vars.DUO_NEW_VERSION_FOUND }} == "true"
     runs-on: [self-hosted, X64]
     steps:
       - name: checkout
@@ -41,4 +41,4 @@ jobs:
           platforms: linux/amd64
           tags: |
             "${{ env.REGISTRY }}/arc-${{ env.IMAGE_NAME }}:latest"
-            "${{ env.REGISTRY }}/arc-${{ env.IMAGE_NAME }}:{{ env.DUO_LATEST_VERSION }}"
+            "${{ env.REGISTRY }}/arc-${{ env.IMAGE_NAME }}:{{ vars.DUO_LATEST_VERSION }}"
