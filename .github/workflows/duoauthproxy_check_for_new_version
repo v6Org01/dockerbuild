@@ -12,22 +12,18 @@ jobs:
   check-version:
     runs-on: [self-hosted, X64]
     steps:
-      - name: Check for New Version
+      - name: check_version
         id: check_version
         run: |
           latest_version=$(curl -s -I -L "https://dl.duosecurity.com/duoauthproxy-latest-src.tgz" | grep -i "content-disposition" | awk -F'filename="' '{print $2}' | awk -F'"' '{print $1}' | awk -F'-' '{print $2}')
-          
-          # Retrieve the stored version
-          previous_version=${{ env.PREVIOUS_VERSION }}
-          latest_version=${{ env.LATEST_VERSION }}
 
-          if [ "$latest_version" != "$previous_version" ]; then
+          if [ "$latest_version" != "${{ env.DUO_PREVIOUS_VERSION }}" ]; then
             echo "New version found: $latest_version"
             echo "::set-output name=new_version::true"
-            echo "::set-env name=PREVIOUS_VERSION::$previous_version"
-            echo "::set-env name=LATEST_VERSION::$latest_version"
-            exit 0 # Exit with success
+            echo "::set-env name=DUO_PREVIOUS_VERSION::${{ env.DUO_LATEST_VERSION }}"
+            echo "::set-env name=DUO_LATEST_VERSION::$latest_version"
+            exit 78 # Custom exit code indicating neutral status            
           else
             echo "No new version found."
-            exit 78 # Custom exit code indicating neutral status
+            exit 0 # Exit with success
           fi
