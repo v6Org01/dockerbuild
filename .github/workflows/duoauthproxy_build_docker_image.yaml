@@ -13,7 +13,7 @@ on:
 
 jobs:
   build-image:
-    if: github.event.workflow_run.conclusion == 'neutral' && github.event.workflow_run.head_commit.message == 'Neutral exit code: 78'
+    if: ${{ env.DUO_NEW_VERSION_FOUND }} == 'true'
     runs-on: [self-hosted, X64]
     steps:
       - name: checkout
