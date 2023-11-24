@@ -24,7 +24,7 @@ jobs:
   build-image:
     runs-on: [self-hosted, X64]
     needs: debug  # Actions runs jobs in parallel by default. Setting a dependency makes it run in a sequence.
-    if: ${{ vars.DUO_NEW_VERSION_FOUND == "true" }}
+    if: ${{ vars.DUO_NEW_VERSION_FOUND == 'true' }}
     steps:
       - name: checkout
         uses: actions/checkout@v4
