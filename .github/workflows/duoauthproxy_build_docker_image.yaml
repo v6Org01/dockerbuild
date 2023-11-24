@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   build-image:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }} && ${{ vars.DUO_NEW_VERSION_FOUND }} == "true"
+    if: ${{ vars.DUO_NEW_VERSION_FOUND }} == "true"
     runs-on: [self-hosted, X64]
     steps:
       - name: checkout
