@@ -16,9 +16,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  runs-on: [self-hosted, X64]
+  debug:
+    steps:
+      - name: print var DUO_NEW_VERSION_FOUND
+        run: echo "DUO_NEW_VERSION_FOUND value is ${{ vars.DUO_NEW_VERSION_FOUND }}" 
   build-image:
-    if: ${{ vars.DUO_NEW_VERSION_FOUND }} == "true"
-    runs-on: [self-hosted, X64]
+    if: ${{ vars.DUO_NEW_VERSION_FOUND == "true" }}
     steps:
       - name: checkout
         uses: actions/checkout@v4
