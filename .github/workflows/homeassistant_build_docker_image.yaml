@@ -68,7 +68,7 @@ jobs:
         with:
           include: "${{ env.GIT_SUBDIR }}/ldap-auth-ad.py"
           find: ^\s*\(memberOf=.*
-          replace: "${{ vars.HA_LDAP_MEMBEROF }}"
+          replace: ${{ vars.HA_LDAP_MEMBEROF }}
           regex: true
   build-image:
     runs-on: [self-hosted, X64]
