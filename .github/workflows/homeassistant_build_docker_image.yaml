@@ -40,35 +40,35 @@ jobs:
         with:
           include: "${{ env.GIT_SUBDIR }}/ldap-auth-ad.py"
           find: ^(SERVER = ).*$
-          replace: "${{ vars.HA_LDAP_SERVER }}"
+          replace: "${{ secrets.HA_LDAP_SERVER }}"
           regex: true
       - name: find and replace - ldap-auth-ad - HA_LDAP_HELPER_DN
         uses: jacobtomlinson/gha-find-replace@v3
         with:
           include: "${{ env.GIT_SUBDIR }}/ldap-auth-ad.py"
           find: ^(HELPERDN = ).*$
-          replace: "${{ vars.HA_LDAP_HELPERDN }}"
+          replace: "${{ secrets.HA_LDAP_HELPERDN }}"
           regex: true
       - name: find and replace - ldap-auth-ad - HA_LDAP_HELPER_PWD
         uses: jacobtomlinson/gha-find-replace@v3
         with:
           include: "${{ env.GIT_SUBDIR }}/ldap-auth-ad.py"
           find: ^(HELPERPASS = ).*$
-          replace: "${{ vars.HA_LDAP_HELPER_PWD }}"
+          replace: "${{ secrets.HA_LDAP_HELPER_PWD }}"
           regex: true
       - name: find and replace - ldap-auth-ad - HA_LDAP_BASEDN
         uses: jacobtomlinson/gha-find-replace@v3
         with:
           include: "${{ env.GIT_SUBDIR }}/ldap-auth-ad.py"
           find: ^(BASEDN = ).*$
-          replace: "${{ vars.HA_LDAP_BASEDN }}"
+          replace: "${{ secrets.HA_LDAP_BASEDN }}"
           regex: true
       - name: find and replace - ldap-auth-ad - HA_LDAP_MEMBEROF
         uses: jacobtomlinson/gha-find-replace@v3
         with:
           include: "${{ env.GIT_SUBDIR }}/ldap-auth-ad.py"
           find: ^\s*\(memberOf=.*
-          replace: ${{ vars.HA_LDAP_MEMBEROF }}
+          replace: ${{ secrets.HA_LDAP_MEMBEROF }}
           regex: true
   build-image:
     runs-on: [self-hosted, X64]
