@@ -29,17 +29,17 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
       - name: find and replace - Dockerfile
-        run: sed -i 's/FROM homeassistant\/home-assistant:.*/FROM homeassistant\/home-assistant:${{ vars.HA_VERSION }}/' homeassistant/Dockerfile
+        run: sed -i "s/FROM homeassistant\/home-assistant:.*/FROM homeassistant\/home-assistant:${{ vars.HA_VERSION }}/" homeassistant/Dockerfile
       - name: find and replace - ldap-auth-ad - HA_LDAP_SERVER
-        run: sed -i 's/SERVER =.*/SERVER = ${{ secrets.HA_LDAP_SERVER }}/' homeassistant/ldap-auth-ad.py
+        run: sed -i "s/SERVER =.*/SERVER = ${{ secrets.HA_LDAP_SERVER }}/" homeassistant/ldap-auth-ad.py
       - name: find and replace - ldap-auth-ad - HA_LDAP_HELPER_DN
-        run: sed -i 's/HELPERDN =.*/HELPERDN = ${{ secrets.HA_LDAP_HELPER_DN }}/' homeassistant/ldap-auth-ad.py
+        run: sed -i "s/HELPERDN =.*/HELPERDN = ${{ secrets.HA_LDAP_HELPER_DN }}/" homeassistant/ldap-auth-ad.py
       - name: find and replace - ldap-auth-ad - HA_LDAP_HELPER_PWD
-        run: sed -i 's/HELPERPASS =.*/HELPERPASS = ${{ secrets.HA_LDAP_HELPER_PWD }}/' homeassistant/ldap-auth-ad.py
+        run: sed -i "s/HELPERPASS =.*/HELPERPASS = ${{ secrets.HA_LDAP_HELPER_PWD }}/" homeassistant/ldap-auth-ad.py
       - name: find and replace - ldap-auth-ad - HA_LDAP_BASEDN
-        run: sed -i 's/BASEDN =.*/BASEDN = ${{ secrets.HA_LDAP_BASEDN }}/' homeassistant/ldap-auth-ad.py
+        run: sed -i "s/BASEDN =.*/BASEDN = ${{ secrets.HA_LDAP_BASEDN }}/" homeassistant/ldap-auth-ad.py
       - name: find and replace - ldap-auth-ad - HA_LDAP_MEMBEROF
-        run: sed -i 's/memberOf=.*/memberOf=${{ secrets.HA_LDAP_MEMBEROF }}/' homeassistant/ldap-auth-ad.py
+        run: sed -i "s/memberOf=.*/memberOf=${{ secrets.HA_LDAP_MEMBEROF }}/" homeassistant/ldap-auth-ad.py
   build-image:
     runs-on: [self-hosted, X64]
     needs: chconfig
