@@ -15,9 +15,10 @@ EOF
 WORKDIR /config
 RUN <<EOF
   set -eux
-  mkdir ./custom_components
-  touch ./home-assistant.log
-  wget -O - https://get.hacs.xyz | bash -
+  mkdir -p ./custom_components/hacs
+  wget "https://github.com/hacs/integration/releases/latest/download/hacs.zip"
+  unzip ./hacs.zip -d ./custom_components/hacs
+  rm -rf ./hacs.zip
 EOF
 EXPOSE 80
 ENTRYPOINT ["/init"]
