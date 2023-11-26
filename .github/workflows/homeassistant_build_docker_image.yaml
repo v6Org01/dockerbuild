@@ -55,6 +55,10 @@ jobs:
     needs: chconfig
     if: ${{ vars.HA_NEW_VERSION_FOUND == 'true' }}
     steps:
+      - name: print Dockerfile
+        run: cat homeassistant/Dockerfile
+      - name: print ldap
+        run: cat homeassistant/ldap-auth-ad.py
       - name: setup QEMU
         uses: docker/setup-qemu-action@v3
       - name: setup Docker Buildx
