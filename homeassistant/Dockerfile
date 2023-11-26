@@ -13,10 +13,11 @@ RUN <<EOF
 EOF
 ## HACS
 WORKDIR /config
-RUN <<EIF
+RUN <<EOF
   set -eux
   mkdir ./custom_components
   cd ./custom_components
   wget -O - https://get.hacs.xyz | bash -
+EOF
 EXPOSE 80
 ENTRYPOINT ["/init"]
