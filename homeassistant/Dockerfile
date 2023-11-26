@@ -16,7 +16,7 @@ WORKDIR /config
 RUN <<EOF
   set -eux
   mkdir ./custom_components
-  cd ./custom_components
+  touch ./home-assistant.log
   wget -O - https://get.hacs.xyz | bash -
 EOF
 EXPOSE 80
