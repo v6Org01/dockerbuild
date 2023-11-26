@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: print var HA_NEW_VERSION_FOUND
         run: echo "HA_NEW_VERSION_FOUND value is ${{ vars.HA_NEW_VERSION_FOUND }}" 
-  chconfig:
+  chconfig_build_push:
     runs-on: [self-hosted, X64]
     needs: debug
     if: ${{ vars.HA_NEW_VERSION_FOUND == 'true' }}
@@ -50,23 +50,6 @@ jobs:
         run: |
           LDAP_MEMBEROF="${{ secrets.HA_LDAP_MEMBEROF }}"
           sed -i "s/memberOf=.*/memberOf=${LDAP_MEMBEROF}/" homeassistant/ldap-auth-ad.py
-      - name: commit files
-        run: |
-          git config --local user.email "39435022+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git commit -a -m "Add changes"
-      - name: push # Any modifications during a GitHub Actions workflow are only made to the working copy checked out by the actions/checkout step.
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.PAT }}
-          branch: ${{ github.ref }}
-  build-image:
-    runs-on: [self-hosted, X64]
-    needs: chconfig
-    if: ${{ vars.HA_NEW_VERSION_FOUND == 'true' }}
-    steps:
-      - name: checkout
-        uses: actions/checkout@v4
       - name: print Dockerfile
         run: cat homeassistant/Dockerfile
       - name: print ldap
