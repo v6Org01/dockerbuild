@@ -23,7 +23,7 @@ jobs:
         run: echo "HA_NEW_VERSION_FOUND value is ${{ vars.HA_NEW_VERSION_FOUND }}" 
   build-image:
     runs-on: [self-hosted, X64]
-    needs: chconfig
+    needs: debug
     if: ${{ vars.HA_NEW_VERSION_FOUND == 'true' }}
     steps:
       - name: checkout
