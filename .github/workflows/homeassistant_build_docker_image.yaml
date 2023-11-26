@@ -47,7 +47,7 @@ jobs:
         with:
           include: "${{ env.GIT_SUBDIR }}/ldap-auth-ad.py"
           find: ^(HELPERDN = ).*$
-          replace: "${{ secrets.HA_LDAP_HELPERDN }}"
+          replace: "${{ secrets.HA_LDAP_HELPER_DN }}"
           regex: true
       - name: find and replace - ldap-auth-ad - HA_LDAP_HELPER_PWD
         uses: jacobtomlinson/gha-find-replace@v3
