@@ -29,47 +29,17 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
       - name: find and replace - Dockerfile
-        uses: jacobtomlinson/gha-find-replace@v3
-        with:
-          include: "${{ env.GIT_SUBDIR }}/Dockerfile"
-          find: ^(FROM homeassistant\/home-assistant:).*$
-          replace: "${{ vars.HA_VERSION }}"
-          regex: true
+        run: sed -i 's/FROM homeassistant\/home-assistant:.*/FROM homeassistant\/home-assistant:${{ vars.HA_VERSION }}/' ./Dockerfile
       - name: find and replace - ldap-auth-ad - HA_LDAP_SERVER
-        uses: jacobtomlinson/gha-find-replace@v3
-        with:
-          include: "${{ env.GIT_SUBDIR }}/ldap-auth-ad.py"
-          find: ^(SERVER = ).*$
-          replace: "${{ secrets.HA_LDAP_SERVER }}"
-          regex: true
+        run: sed -i 's/SERVER =.*/SERVER = ${{ secrets.HA_LDAP_SERVER }}/' ./ldap-auth-ad.py
       - name: find and replace - ldap-auth-ad - HA_LDAP_HELPER_DN
-        uses: jacobtomlinson/gha-find-replace@v3
-        with:
-          include: "${{ env.GIT_SUBDIR }}/ldap-auth-ad.py"
-          find: ^(HELPERDN = ).*$
-          replace: "${{ secrets.HA_LDAP_HELPER_DN }}"
-          regex: true
+        run: sed -i 's/HELPERDN =.*/HELPERDN = ${{ secrets.HA_LDAP_HELPER_DN }}/' ./ldap-auth-ad.py
       - name: find and replace - ldap-auth-ad - HA_LDAP_HELPER_PWD
-        uses: jacobtomlinson/gha-find-replace@v3
-        with:
-          include: "${{ env.GIT_SUBDIR }}/ldap-auth-ad.py"
-          find: ^(HELPERPASS = ).*$
-          replace: "${{ secrets.HA_LDAP_HELPER_PWD }}"
-          regex: true
+        run: sed -i 's/HELPERPASS =.*/HELPERPASS = ${{ secrets.HA_LDAP_HELPER_PWD }}/' ./ldap-auth-ad.py
       - name: find and replace - ldap-auth-ad - HA_LDAP_BASEDN
-        uses: jacobtomlinson/gha-find-replace@v3
-        with:
-          include: "${{ env.GIT_SUBDIR }}/ldap-auth-ad.py"
-          find: ^(BASEDN = ).*$
-          replace: "${{ secrets.HA_LDAP_BASEDN }}"
-          regex: true
+        run: sed -i 's/BASEDN =.*/BASEDN = ${{ secrets.HA_LDAP_BASEDN }}/' ./ldap-auth-ad.py
       - name: find and replace - ldap-auth-ad - HA_LDAP_MEMBEROF
-        uses: jacobtomlinson/gha-find-replace@v3
-        with:
-          include: "${{ env.GIT_SUBDIR }}/ldap-auth-ad.py"
-          find: ^\s*\(memberOf=.*
-          replace: ${{ secrets.HA_LDAP_MEMBEROF }}
-          regex: true
+        run: sed -i 's/memberOf=.*/memberOf=${{ secrets.HA_LDAP_MEMBEROF }}/' ./ldap-auth-ad.py
   build-image:
     runs-on: [self-hosted, X64]
     needs: chconfig
