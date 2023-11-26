@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: print var HA_NEW_VERSION_FOUND
         run: echo "HA_NEW_VERSION_FOUND value is ${{ vars.HA_NEW_VERSION_FOUND }}" 
-  chconfig:
+  chconfig_build_push:
     runs-on: [self-hosted, X64]
     needs: debug
     if: ${{ vars.HA_NEW_VERSION_FOUND == 'true' }}
@@ -50,11 +50,6 @@ jobs:
         run: |
           LDAP_MEMBEROF="${{ secrets.HA_LDAP_MEMBEROF }}"
           sed -i "s/memberOf=.*/memberOf=${LDAP_MEMBEROF}/" homeassistant/ldap-auth-ad.py
-  build-image:
-    runs-on: [self-hosted, X64]
-    needs: chconfig
-    if: ${{ vars.HA_NEW_VERSION_FOUND == 'true' }}
-    steps:
       - name: print Dockerfile
         run: cat homeassistant/Dockerfile
       - name: print ldap
