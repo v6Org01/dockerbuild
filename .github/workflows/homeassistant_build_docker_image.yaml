@@ -21,45 +21,6 @@ jobs:
     steps:
       - name: print var HA_NEW_VERSION_FOUND
         run: echo "HA_NEW_VERSION_FOUND value is ${{ vars.HA_NEW_VERSION_FOUND }}" 
-  chconfig:
-    runs-on: [self-hosted, X64]
-    needs: debug
-    if: ${{ vars.HA_NEW_VERSION_FOUND == 'true' }}
-    steps:
-      - name: checkout
-        uses: actions/checkout@v4
-      - name: find and replace - Dockerfile
-        run: sed -i "s/FROM homeassistant\/home-assistant:.*/FROM homeassistant\/home-assistant:${{ vars.HA_VERSION }}/" homeassistant/Dockerfile
-      - name: find and replace - ldap-auth-ad - HA_LDAP_SERVER
-        run: |
-          LDAP_SERVER="${{ secrets.HA_LDAP_SERVER }}"
-          sed -i "s/SERVER =.*/SERVER = ${LDAP_SERVER}/" homeassistant/ldap-auth-ad.py
-      - name: find and replace - ldap-auth-ad - HA_LDAP_HELPER_DN
-        run: |
-          LDAP_HELPER_DN="${{ secrets.HA_LDAP_HELPER_DN }}"
-          sed -i "s/HELPERDN =.*/HELPERDN = ${LDAP_HELPER_DN}/" homeassistant/ldap-auth-ad.py
-      - name: find and replace - ldap-auth-ad - HA_LDAP_HELPER_PWD
-        run: |
-          LDAP_HELPER_PWD="${{ secrets.HA_LDAP_HELPER_PWD }}"
-          sed -i "s/HELPERPASS =.*/HELPERPASS = ${LDAP_HELPER_PWD}/" homeassistant/ldap-auth-ad.py
-      - name: find and replace - ldap-auth-ad - HA_LDAP_BASEDN
-        run: |
-          LDAP_BASEDN="${{ secrets.HA_LDAP_BASEDN }}"
-          sed -i "s/BASEDN =.*/BASEDN = ${LDAP_BASEDN}/" homeassistant/ldap-auth-ad.py
-      - name: find and replace - ldap-auth-ad - HA_LDAP_MEMBEROF
-        run: |
-          LDAP_MEMBEROF="${{ secrets.HA_LDAP_MEMBEROF }}"
-          sed -i "s/memberOf=.*/memberOf=${LDAP_MEMBEROF}/" homeassistant/ldap-auth-ad.py
-      - name: commit files
-        run: |
-          git config --local user.email "39435022+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git commit -a -m "Add changes"
-      - name: push # Any modifications during a GitHub Actions workflow are only made to the working copy checked out by the actions/checkout step.
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.PAT }}
-          branch: ${{ github.ref }}
   build-image:
     runs-on: [self-hosted, X64]
     needs: chconfig
@@ -67,10 +28,6 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
-      - name: print Dockerfile
-        run: cat homeassistant/Dockerfile
-      - name: print ldap
-        run: cat homeassistant/ldap-auth-ad.py
       - name: setup QEMU
         uses: docker/setup-qemu-action@v3
       - name: setup Docker Buildx

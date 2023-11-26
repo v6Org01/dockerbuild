@@ -14,15 +14,15 @@ def eprint(*args, **kwargs):
 
 # XXX: Update these with settings apropriate to your environment:
 # (mine below are based on Active Directory and a security group)
-SERVER =  
+SERVER = duoauthproxy.duoauthproxy.svc.cluster.local:389
 
 # We need to search by SAM/UPN to find the DN, so we use a helper account
 # This account should be unprivileged and blocked from interactive logon
-HELPERDN =  
-HELPERPASS =  
+HELPERDN = CN=svchomeassistant,OU=people,DC=jlv6,DC=com
+HELPERPASS = gJEM67rxfLGQXWpkD4VgqL5uWqJSVHeEiKkB4BrAWaekY6xedFcLk9gvSmT7osnxyTusmpxjAgQ7PaTjsdbfKychJAMkSWTuDAxEWsjHvmb8QwD2f4jHHU4Ucc6NKbGu
 
 TIMEOUT = 30
-BASEDN =  
+BASEDN = DC=jlv6,DC=com
 FILTER = """
     (&
         (objectClass=person)
@@ -30,7 +30,7 @@ FILTER = """
             (sAMAccountName={})
             (userPrincipalName={})
         )
-        (memberOf= 
+        (memberOf=CN=homeassistant_rw,OU=groups,DC=jlv6,DC=com)
     )"""
 ATTRS = ""
 
