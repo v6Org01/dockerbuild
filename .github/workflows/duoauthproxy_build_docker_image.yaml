@@ -2,7 +2,7 @@ name: duoauthproxy - build_docker_image
 
 env:
   GIT_SUBDIR: duoauthproxy
-  REGISTRY: http://pcr-http.code.svc.cluster.local:5000
+  REGISTRY: pcrrr00.jlv6.com:443
   
 on:
   workflow_run:
