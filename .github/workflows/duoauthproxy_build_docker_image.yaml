@@ -2,7 +2,7 @@ name: duoauthproxy - build_docker_image
 
 env:
   GIT_SUBDIR: duoauthproxy
-  REGISTRY: pcr-http.code.svc.cluster.local:5000
+  REGISTRY: http://pcr-http.code.svc.cluster.local:5000
   
 on:
   workflow_run:
