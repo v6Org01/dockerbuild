@@ -1,0 +1,52 @@
+    global_defs {
+        router_id rpi02
+        vrrp_version 3
+        vrrp_garp_master_delay 1
+        vrrp_garp_master_refresh 60
+        script_user keepalived
+        enable_script_security
+    }
+
+    vrrp_script chk_haproxy {
+        script "curl -f http://127.0.0.1:8404/healthz || exit 1"
+        timeout 2
+        interval 5
+        fall 2 # require 2 failures for KO
+        rise 2 # require 2 successes for OK
+    }
+
+    vrrp_instance vrrp_1 {
+        state BACKUP
+        interface eth0
+        virtual_router_id 51
+        vrrp_mcast_group4 224.0.0.51
+        priority 100
+        advert_int 1 # Advertisement interval in seconds, determining how often VRRP advertisements are sent.
+        track_interface {
+          eth0 weight -2
+        }
+        track_script {
+          chk_haproxy
+        }
+        virtual_ipaddress {
+          192.168.5.100
+        }
+    }
+
+    vrrp_instance vrrp_2 {
+        state MASTER
+        interface eth0
+        virtual_router_id 52
+        vrrp_mcast_group4 224.0.0.52
+        priority 101
+        advert_int 1
+        track_interface {
+          eth0 weight -2
+        }
+        track_script {
+          chk_haproxy
+        }
+        virtual_ipaddress {
+          192.168.5.101
+        }
+    }
