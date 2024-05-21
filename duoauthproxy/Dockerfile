@@ -2,7 +2,6 @@
 FROM almalinux:9.2-minimal
 LABEL os="almalinux:9.2-minimal"
 LABEL maintainer="dev_lau11@a.jlv6.com"
-USER root
 RUN <<EOF
   set -eux
   microdnf update -y
