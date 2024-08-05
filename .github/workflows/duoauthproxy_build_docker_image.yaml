@@ -33,7 +33,7 @@ jobs:
       - name: setup Docker Buildx
         uses: docker/setup-buildx-action@v3
         with:
-          config-inline: |
+          buildkitd-config-inline: |
             [registry."${{ env.REGISTRY }}"]
               http = true
               insecure = true
