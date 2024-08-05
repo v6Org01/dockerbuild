@@ -2,7 +2,7 @@ name: duoauthproxy - build_docker_image
 
 env:
   GIT_SUBDIR: duoauthproxy
-  REGISTRY: pcr-http.code.svc.cluster.local:5000
+  REGISTRY: forgejo-http.core.svc.cluster.local:3000
   
 on:
   workflow_run:
@@ -47,7 +47,9 @@ jobs:
         with:
           context: "{{defaultContext}}:${{ env.GIT_SUBDIR }}"
           push: true
-          platforms: linux/amd64
+          platforms: linux/amd64, linux/arm64
+          secrets: |
+            "GIT_AUTH_TOKEN=${{ secrets.FORGEJO_K8SRUNNER434_PAT }}"
           tags: |
             "${{ env.REGISTRY }}/arc-${{ env.GIT_SUBDIR }}:latest"
             "${{ env.REGISTRY }}/arc-${{ env.GIT_SUBDIR }}:${{ vars.DUO_VERSION }}"
