@@ -34,13 +34,19 @@ jobs:
         with:
           buildkitd-config-inline: |
             [registry."${{ secrets.FORGEJO_REGISTRY01 }}"]
-              http = true
-              insecure = true
+              http = false
+              insecure = false
       - name: extract metadata for the docker image
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: "${{ secrets.FORGEJO_REGISTRY01 }}/arc-${{ env.GIT_SUBDIR }}"
+      - name: login to forgejo
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.FORGEJO_REGISTRY01 }}
+          username: ${{ secrets.FORGEJO_USER01 }}
+          password: ${{ secrets.FORGEJO_USER01_PAT }}
       - name: build and push
         uses: docker/build-push-action@v5
         with:
