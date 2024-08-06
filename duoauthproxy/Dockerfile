@@ -13,7 +13,7 @@ RUN <<EOF
   tar xzf ./duoauthproxy.tgz -C ./duoauthproxy --strip-components=1
   cd ./duoauthproxy
   make
-  ./duoauthproxy-build/install --install-dir /opt/duoauthproxy --service-user duo_auth_svc --log-group duo_auth_log_grp --create-init-script yes --enable-selinux=no
+  ./duoauthproxy-build/install --install-dir /opt/duoauthproxy --service-user duo_authproxy_svc --log-group duo_authproxy_grp --create-init-script yes --enable-selinux=no
   rm -rf ../duoauthproxy ../duoauthproxy.tgz
 EOF
 EXPOSE 389
