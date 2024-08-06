@@ -41,15 +41,9 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: "${{ secrets.FORGEJO_REGISTRY01 }}/arc-${{ env.GIT_SUBDIR }}"
-      - name: output daemon.json 1
-        run: |
-          cat /etc/docker/daemon.json
       - name: login to forgejo
         run: |
           docker login http://${{ secrets.FORGEJO_REGISTRY01 }} -u ${{ secrets.FORGEJO_USER01 }} -p ${{ secrets.FORGEJO_USER01_PAT }}
-      - name: output daemon.json 2
-        run: |
-          cat /etc/docker/daemon.json
       - name: build and push
         uses: docker/build-push-action@v5
         with:
