@@ -40,7 +40,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: "${{ secrets.FORGEJO_REGISTRY01 }}/arc-${{ env.GIT_SUBDIR }}"
+          images: "${{ secrets.FORGEJO_REGISTRY01 }}/${{ secrets.FORGEJO_OWNER01 }}/arc-${{ env.GIT_SUBDIR }}"
       - name: login to forgejo
         uses: docker/login-action@v3
         with:
@@ -55,5 +55,5 @@ jobs:
           platforms: linux/amd64
         # platforms: linux/amd64, linux/arm64
           tags: |
-            "${{ secrets.FORGEJO_REGISTRY01 }}/arc-${{ env.GIT_SUBDIR }}:latest"
-            "${{ secrets.FORGEJO_REGISTRY01 }}/arc-${{ env.GIT_SUBDIR }}:${{ vars.DUO_VERSION }}"
+            "${{ secrets.FORGEJO_REGISTRY01 }}/${{ secrets.FORGEJO_OWNER01 }}/arc-${{ env.GIT_SUBDIR }}:latest"
+            "${{ secrets.FORGEJO_REGISTRY01 }}/${{ secrets.FORGEJO_OWNER01 }}/arc-${{ env.GIT_SUBDIR }}:${{ vars.DUO_VERSION }}"
