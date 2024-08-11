@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
-FROM almalinux/9-minimal:9.4
-LABEL os="almalinux:9.4-minimal"
+FROM almalinux:minimal
+LABEL os="almalinux"
 LABEL maintainer="dev_lau11@a.jlv6.com"
 RUN <<EOF
   set -eux

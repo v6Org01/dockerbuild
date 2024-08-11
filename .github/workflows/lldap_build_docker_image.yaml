@@ -1,11 +1,12 @@
-name: duoauthproxy - build_docker_image
+name: lldapBootstrap - build_docker_image
 
 env:
-  GIT_SUBDIR: duoauthproxy
-  
+  GIT_SUBDIR: lldapBootstrap
+
 on:
+  workflow_dispatch:  # allows for triggering workflow manually.
   workflow_run:
-    workflows: ["duoauthproxy - check_for_new_version"]
+    workflows: ["lldapBootstrap - check_for_new_version"]
     branches: [main]
     types:
       - completed
@@ -34,20 +35,28 @@ jobs:
         with:
           buildkitd-config-inline: |
             [registry."${{ secrets.FORGEJO_REGISTRY01 }}"]
-              http = true
-              insecure = true
+              http = false
+              insecure = false
       - name: extract metadata for the docker image
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: "${{ secrets.FORGEJO_REGISTRY01 }}/arc-${{ env.GIT_SUBDIR }}"
+          images: "${{ secrets.FORGEJO_REGISTRY01 }}/${{ secrets.FORGEJO_OWNER01 }}/arc-${{ env.GIT_SUBDIR }}"
+      - name: login to forgejo
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.FORGEJO_REGISTRY01 }}
+          username: ${{ secrets.FORGEJO_USER01 }}
+          password: ${{ secrets.FORGEJO_USER01_PAT }}
       - name: build and push
         uses: docker/build-push-action@v5
         with:
-          context: "{{defaultContext}}:${{ env.GIT_SUBDIR }}"
+          context: {{defaultContext}}:${{ env.GIT_SUBDIR }}
+          build-args: |
+            IMAGE=${{ vars.LLDAP_IMAGE_LATEST }}
           push: true
           platforms: linux/amd64
         # platforms: linux/amd64, linux/arm64
           tags: |
-            "${{ secrets.FORGEJO_REGISTRY01 }}/arc-${{ env.GIT_SUBDIR }}:latest"
-            "${{ secrets.FORGEJO_REGISTRY01 }}/arc-${{ env.GIT_SUBDIR }}:${{ vars.DUO_VERSION }}"
+            "${{ secrets.FORGEJO_REGISTRY01 }}/${{ secrets.FORGEJO_OWNER01 }}/arc-${{ env.GIT_SUBDIR }}:latest"
+            "${{ secrets.FORGEJO_REGISTRY01 }}/${{ secrets.FORGEJO_OWNER01 }}/arc-${{ env.GIT_SUBDIR }}:${{ vars.LLDAP_IMAGE_LATEST }}"

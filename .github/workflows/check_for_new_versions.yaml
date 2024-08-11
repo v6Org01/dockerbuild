@@ -1,0 +1,59 @@
+name: check_for_new_versions
+
+on:
+  workflow_dispatch:  # allows for triggering workflow manually.
+  schedule:
+    - cron: "0 0 * * *"
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  check-version:
+    runs-on: [self-hosted, X64]
+    steps:
+      - name: duoauthproxy_binary
+        id: duoauthproxy_binary
+        run: |
+          latest_version=$(curl -s -I -L "https://dl.duosecurity.com/duoauthproxy-latest-src.tgz" | grep -i "content-disposition" | awk -F'filename="' '{print $2}' | awk -F'"' '{print $1}' | awk -F'-' '{print $2}')
+
+          if [ "$latest_version" != "${{ vars.DUO_VERSION }}" ]; then
+            echo "New version found: $latest_version"
+
+            curl -L \
+              -X PATCH \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${{ secrets.PAT }}" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              https://api.github.com/repos/elaurensx/dockerbuild/actions/variables/DUO_NEW_VERSION_FOUND \
+              -d "{\"name\":\"DUO_NEW_VERSION_FOUND\",\"value\":\"true\"}"
+              
+            curl -L \
+              -X PATCH \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${{ secrets.PAT }}" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              https://api.github.com/repos/elaurensx/dockerbuild/actions/variables/DUO_VERSION \
+              -d "{\"name\":\"DUO_VERSION\",\"value\":\"$latest_version\"}"
+              
+          else
+            echo "No new version found."
+            
+            curl -L \
+              -X PATCH \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${{ secrets.PAT }}" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              https://api.github.com/repos/elaurensx/dockerbuild/actions/variables/DUO_NEW_VERSION_FOUND \
+              -d "{\"name\":\"DUO_NEW_VERSION_FOUND\",\"value\":\"false\"}"
+              
+          fi
+      - name: lldap-alpine-rootless_image
+        id: lldap-alpine-rootless_image
+        env:
+          GITHUB_PAT: ${{ secrets.PAT }}
+          LLDAP_LATEST_IMAGE: ${{ vars.LLDAP_IMAGE_LATEST }}
+        run: |
+          chmod +x ./fetch-latest-tag.sh
+          ./fetch-latest-tag.sh
