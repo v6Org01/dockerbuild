@@ -6,7 +6,8 @@ env:
 on:
   workflow_run:
     workflows: ["duoauthproxy - check_for_new_version"]
-    branches: [main]
+    branches:
+      - main
     types:
       - completed
 
@@ -16,12 +17,14 @@ concurrency:
 
 jobs:
   debug:
-    runs-on: [self-hosted, X64]
+    runs-on:
+      - self-hosted
     steps:
       - name: print var DUO_NEW_VERSION_FOUND
         run: echo "DUO_NEW_VERSION_FOUND value is ${{ vars.DUO_NEW_VERSION_FOUND }}" 
   build-image:
-    runs-on: [self-hosted, X64]
+    runs-on:
+      - self-hosted
     needs: debug  # Actions runs jobs in parallel by default. Setting a dependency makes it run in a sequence.
     if: ${{ vars.DUO_NEW_VERSION_FOUND == 'true' }}
     steps:
@@ -52,8 +55,7 @@ jobs:
         with:
           context: "{{defaultContext}}:${{ env.GIT_SUBDIR }}"
           push: true
-          platforms: linux/amd64
-        # platforms: linux/amd64, linux/arm64
+          platforms: linux/amd64, linux/arm64
           tags: |
             "${{ secrets.FORGEJO_REGISTRY01 }}/${{ secrets.FORGEJO_OWNER01 }}/arc-${{ env.GIT_SUBDIR }}:latest"
             "${{ secrets.FORGEJO_REGISTRY01 }}/${{ secrets.FORGEJO_OWNER01 }}/arc-${{ env.GIT_SUBDIR }}:${{ vars.DUO_VERSION }}"
