@@ -13,6 +13,7 @@ jobs:
   check-version:
     runs-on:
       - self-hosted
+      - X64
     steps:
       - name: find latest available version and update secrets
         run: |
