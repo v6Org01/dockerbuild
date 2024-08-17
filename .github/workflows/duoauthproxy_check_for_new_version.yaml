@@ -26,16 +26,16 @@ jobs:
               -H "Accept: application/vnd.github+json" \
               -H "Authorization: Bearer ${{ secrets.PAT }}" \
               -H "X-GitHub-Api-Version: 2022-11-28" \
-              -d "{\"name\":\"DUO_NEW_VERSION_FOUND\",\"value\":\"true\"}"
-              https://api.github.com/repos/elaurensx/dockerbuild/actions/variables/DUO_NEW_VERSION_FOUND \
+              -d "{\"name\":\"DUO_NEW_VERSION_FOUND\",\"value\":\"true\"}" \
+              https://api.github.com/repos/elaurensx/dockerbuild/actions/variables/DUO_NEW_VERSION_FOUND
               
             curl -L \
               -X PATCH \
               -H "Accept: application/vnd.github+json" \
               -H "Authorization: Bearer ${{ secrets.PAT }}" \
               -H "X-GitHub-Api-Version: 2022-11-28" \
-              -d "{\"name\":\"DUO_VERSION\",\"value\":\"$latest_version\"}"
-              https://api.github.com/repos/elaurensx/dockerbuild/actions/variables/DUO_VERSION \
+              -d "{\"name\":\"DUO_VERSION\",\"value\":\"$latest_version\"}" \
+              https://api.github.com/repos/elaurensx/dockerbuild/actions/variables/DUO_VERSION
               
           else
             echo "No new version found."
@@ -45,6 +45,6 @@ jobs:
               -H "Accept: application/vnd.github+json" \
               -H "Authorization: Bearer ${{ secrets.PAT }}" \
               -H "X-GitHub-Api-Version: 2022-11-28" \
-              -d "{\"name\":\"DUO_NEW_VERSION_FOUND\",\"value\":\"false\"}"
-              https://api.github.com/repos/elaurensx/dockerbuild/actions/variables/DUO_NEW_VERSION_FOUND \
+              -d "{\"name\":\"DUO_NEW_VERSION_FOUND\",\"value\":\"false\"}" \
+              https://api.github.com/repos/elaurensx/dockerbuild/actions/variables/DUO_NEW_VERSION_FOUND
           fi
