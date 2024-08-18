@@ -26,8 +26,15 @@ jobs:
   build-image:
     strategy:
       matrix:
-        arch: ["X64","ARM64"]
-    runs-on: ${{ matrix.arch }}
+        platform:
+          - linux/amd64
+          - linux/arm64
+        include:
+          - platform: linux/amd64
+            runner: x64
+          - platform: linux/arm64
+            runnner: arm64
+    runs-on: ${{ matrix.runner }}
     needs: debug
     if: ${{ vars.DUO_NEW_VERSION_FOUND == 'true' }}
 
@@ -51,10 +58,13 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: "{{defaultContext}}:${{ env.GIT_SUBDIR }}"
+          platforms: ${{ matrix.platform }}
           file: Dockerfile
           outputs: type=image,name=${{ env.REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
-          cache-from: type=gha,scope=build-${{ matrix.arch }}
-          cache-to: type=gha,mode=max,scope=build-${{ matrix.arch }}
+          cache-from: type=gha,scope=build-${{ matrix.platform }}
+          cache-to: type=gha,mode=max,scope=build-${{ matrix.platform }}
+          tags: |
+            ${{ env.REGISTRY_IMAGE }}:${{ vars.DUO_VERSION }}-${{ matrix.runner }}
 
       - name: Export digest
         run: |
@@ -65,7 +75,7 @@ jobs:
       - name: Upload digests
         uses: actions/upload-artifact@v4
         with:
-          name: digests-${{ matrix.arch }}
+          name: digests-${{ matrix.platform }}
           path: /tmp/digests/*
           if-no-files-found: error
           retention-days: 1
@@ -96,7 +106,9 @@ jobs:
       - name: Create manifest list and push
         working-directory: /tmp/digests
         run: |
-          docker buildx imagetools create -t ${{ env.REGISTRY_IMAGE }}:${{ vars.DUO_VERSION }}
+          docker buildx imagetools create -t ${{ env.REGISTRY_IMAGE }}:${{ vars.DUO_VERSION }} \
+            ${{ env.REGISTRY_IMAGE }}:${{ vars.DUO_VERSION }}-x64 \
+            ${{ env.REGISTRY_IMAGE }}:${{ vars.DUO_VERSION }}-arm64
 
       - name: Inspect image
         run: |
