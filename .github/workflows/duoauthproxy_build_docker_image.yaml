@@ -5,6 +5,7 @@ env:
   REGISTRY_IMAGE: "${{ secrets.FORGEJO_REGISTRY01 }}/${{ secrets.FORGEJO_OWNER01 }}/arc-duoauthproxy"
 
 on:
+  workflow_dispatch:
   workflow_run:
     workflows: ["duoauthproxy - check_for_new_version"]
     branches: ["main"]
