@@ -66,7 +66,7 @@ jobs:
         id: build
         uses: docker/build-push-action@v6
         with:
-          context: {{defaultContext}}:${{ env.GIT_SUBDIR }}
+          context: "{{defaultContext}}:${{ env.GIT_SUBDIR }}"
           file: Dockerfile
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
