@@ -27,13 +27,13 @@ jobs:
     strategy:
       matrix:
         platform:
-          - linux/amd64
-          - linux/arm64
+          - amd64
+          - arm64
         include:
-          - platform: linux/amd64
+          - platform: amd64
             runner: x64
-          - platform: linux/arm64
-            runnner: arm64
+          - platform: arm64
+            runner: arm64
     runs-on: ${{ matrix.runner }}
     needs: debug
     if: ${{ vars.DUO_NEW_VERSION_FOUND == 'true' }}
@@ -58,13 +58,13 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: "{{defaultContext}}:${{ env.GIT_SUBDIR }}"
-          platforms: ${{ matrix.platform }}
+          platforms: linux/${{ matrix.platform }}
           file: Dockerfile
           outputs: type=image,name=${{ env.REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
           cache-from: type=gha,scope=build-${{ matrix.platform }}
           cache-to: type=gha,mode=max,scope=build-${{ matrix.platform }}
           tags: |
-            ${{ env.REGISTRY_IMAGE }}:${{ vars.DUO_VERSION }}-${{ matrix.runner }}
+            ${{ env.REGISTRY_IMAGE }}:${{ vars.DUO_VERSION }}-${{ matrix.platform }}
 
       - name: Export digest
         run: |
@@ -107,7 +107,7 @@ jobs:
         working-directory: /tmp/digests
         run: |
           docker buildx imagetools create -t ${{ env.REGISTRY_IMAGE }}:${{ vars.DUO_VERSION }} \
-            ${{ env.REGISTRY_IMAGE }}:${{ vars.DUO_VERSION }}-x64 \
+            ${{ env.REGISTRY_IMAGE }}:${{ vars.DUO_VERSION }}-amd64 \
             ${{ env.REGISTRY_IMAGE }}:${{ vars.DUO_VERSION }}-arm64
 
       - name: Inspect image
