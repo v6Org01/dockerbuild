@@ -63,6 +63,7 @@ jobs:
           push: true
           cache-from: type=gha,scope=build-${{ matrix.platform }}
           cache-to: type=gha,mode=max,scope=build-${{ matrix.platform }}
+          provenance: false
           tags: |
             "${{ env.REGISTRY_IMAGE }}:${{ vars.DUO_VERSION }}-${{ matrix.platform }}"
 
