@@ -6,7 +6,6 @@ RUN <<EOF
   set -eux
   microdnf update -y
   microdnf install tar wget gcc make libffi-devel perl zlib-devel diffutils -y
-  ln -sf /usr/share/zoneinfo/Europe/Brussels /etc/localtime
   ln -sf /sbin/nologin /bin/nologin
   cd /tmp
   wget -O ./duoauthproxy.tgz --content-disposition https://dl.duosecurity.com/duoauthproxy-latest-src.tgz
@@ -18,4 +17,4 @@ RUN <<EOF
   rm -rf ../duoauthproxy ../duoauthproxy.tgz
 EOF
 EXPOSE 389
-ENTRYPOINT ["/opt/duoauthproxy/bin/authproxy"]
+ENTRYPOINT ["/opt/duoauthproxy/bin/authproxy >> /proc/1/fd/1"]
