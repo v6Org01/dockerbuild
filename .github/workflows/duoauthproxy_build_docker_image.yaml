@@ -83,10 +83,10 @@ jobs:
         run: |
           docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ vars.DUO_VERSION }}
 
-          #  deploy:
-          #    needs: merge
-          #    uses: v6Org01/k8s/.github/workflows/reusable-deployApp.yaml
-          #    with:
-          #      APP: duoauthproxy
-          #      VERSION: ${{ vars.DUO_VERSION }}
-          #      NAMESPACE: core
+  deploy:
+    needs: merge
+    uses: v6Org01/k8s/.github/workflows/reusable-deployApp.yaml
+    with:
+      APP: duoauthproxy
+      VERSION: ${{ vars.DUO_VERSION }}
+      NAMESPACE: core
