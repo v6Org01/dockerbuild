@@ -85,7 +85,7 @@ jobs:
 
   deploy:
     needs: merge
-    uses: v6Org01/k8s/.github/workflows/reusable-deployApp.yaml
+    uses: v6Org01/k8s/.github/workflows/reusable-deployApp.yaml@main
     with:
       APP: duoauthproxy
       VERSION: ${{ vars.DUO_VERSION }}
