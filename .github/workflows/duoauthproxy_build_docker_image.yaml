@@ -93,3 +93,5 @@ jobs:
       APP: duoauthproxy
       VERSION: ${{ vars.DUO_VERSION }}
       NAMESPACE: core
+    secrets:
+      PAT: ${{ secrets.PAT }}
