@@ -87,7 +87,7 @@ jobs:
           docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ vars.DUO_VERSION }}
 
   deploy:
-    needs: merge
+    needs: build-merge
     uses: v6Org01/k8s/.github/workflows/reusableDeployApp.yaml@main
     with:
       APP: duoauthproxy
