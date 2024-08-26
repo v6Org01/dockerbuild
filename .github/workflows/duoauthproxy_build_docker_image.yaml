@@ -95,3 +95,8 @@ jobs:
       NAMESPACE: core
     secrets:
       PAT: ${{ secrets.PAT }}
+      KUBECONFIG_PLUTO_STAGING_ONLY: ${{ secrets.KUBECONFIG_PLUTO_STAGING_ONLY }}
+      KUBECONFIG_PLUTO_CORE_PROD: ${{ secrets.KUBECONFIG_PLUTO_CORE_PROD }}
+      LDAP_BASEDN: ${{ secrets.LDAP_BASEDN }}
+      DUO_LDAP_USER: ${{ secrets.DUO_LDAP_USER }}
+      DUO_LDAP_PASSWD: ${{ secrets.DUO_LDAP_PASSWD }}
