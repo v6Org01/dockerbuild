@@ -65,7 +65,7 @@ jobs:
           tags: |
             "${{ env.REGISTRY_IMAGE }}:${{ vars.DUO_VERSION }}-${{ matrix.platform }}"
 
-  merge:
+  build-merge:
     runs-on: self-hosted
     needs: build-image
     steps:
@@ -88,7 +88,7 @@ jobs:
 
   deploy:
     needs: merge
-    uses: v6Org01/k8s/.github/workflows/reusable-deployApp.yaml@main
+    uses: v6Org01/k8s/.github/workflows/reusableDeployApp.yaml@main
     with:
       APP: duoauthproxy
       VERSION: ${{ vars.DUO_VERSION }}
