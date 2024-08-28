@@ -24,7 +24,7 @@ jobs:
       - name: Build
         uses: docker/build-push-action@v6
         with:
-          context: "{{defaultContext}}:${{ env.GIT_SUBDIR }}"
+          context: "{{defaultContext}}:${{ env.APP }}"
           file: DockerfileVersion
           push: false
           cache-from: type=gha,scope=build-${{ env.APP }}-${{ runner.arch }}
@@ -33,7 +33,7 @@ jobs:
       - name: Run container
         id: run-container
         run: |
-          APP_VERSION=$(docker run --rm version-image:latest cat /tmp/version.txt)
+          APP_VERSION=$(docker run --rm version-image:latest)
           echo "APP_VERSION=$APP_VERSION" >> $GITHUB_OUTPUT
       - name: Update secrets
         run: |
