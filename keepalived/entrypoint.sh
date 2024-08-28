@@ -1,15 +1,7 @@
 #!/bin/sh
 
-# Function to check if HAProxy is ready
-check_haproxy() {
-  while ! /usr/bin/curl -sf http://127.0.0.1:8404/healthz; do
-    echo "Waiting for HAProxy to be ready..."
-    sleep 5
-  done
-}
+# Substitute environment variables in the configuration template
+envsubst < /etc/keepalived/keepalived.conf.env > /etc/keepalived/keepalived.conf
 
-# Run the check_haproxy function
-check_haproxy
-
-# Replace the shell with the keepalived process
-exec /usr/sbin/keepalived --dont-fork --log-console --log-detail --vrrp
+# Execute the main process (default CMD or overridden command)
+exec "$@"

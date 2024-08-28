@@ -1,7 +1,7 @@
 name: duoauthproxy - build_docker_image
 
 env:
-  GIT_SUBDIR: duoauthproxy
+  APP: duoauthproxy
   REGISTRY_IMAGE: "${{ secrets.FORGEJO_REGISTRY01 }}/${{ secrets.FORGEJO_OWNER01 }}/arc-duoauthproxy"
 
 on:
@@ -55,12 +55,12 @@ jobs:
         id: build
         uses: docker/build-push-action@v6
         with:
-          context: "{{defaultContext}}:${{ env.GIT_SUBDIR }}"
+          context: "{{defaultContext}}:${{ env.APP }}"
           platforms: linux/${{ matrix.platform }}
           file: Dockerfile
           push: true
-          cache-from: type=gha,scope=build-${{ matrix.platform }}
-          cache-to: type=gha,mode=max,scope=build-${{ matrix.platform }}
+          cache-from: type=gha,scope=build-${{ env.APP }}-${{ matrix.platform }}
+          cache-to: type=gha,mode=max,scope=build-${{ env.APP }}-${{ matrix.platform }}
           provenance: false
           tags: |
             "${{ env.REGISTRY_IMAGE }}:${{ vars.DUO_VERSION }}-${{ matrix.platform }}"
@@ -90,7 +90,7 @@ jobs:
     needs: build-merge
     uses: v6Org01/k8s/.github/workflows/reusableDeployApp.yaml@main
     with:
-      APP: duoauthproxy
+      APP: ${{ env.APP }} 
       VERSION: ${{ vars.DUO_VERSION }}
       NAMESPACE: core
     secrets:

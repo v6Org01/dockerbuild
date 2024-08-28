@@ -1,13 +1,13 @@
-FROM alpine:3.19.1
+FROM alpine:latest
 LABEL maintainer="dev_lau11@a.jlv6.com"
-LABEL os="alpine3.19.1"
-ARG LB
-RUN apk --update -t add keepalived curl iproute2 grep bash tcpdump sed && \
-    rm -f /var/cache/apk/* /tmp/* && \
-    rm -f /sbin/halt /sbin/poweroff /sbin/reboot
-COPY ./keepalived.conf.${LB} /etc/keepalived/keepalived.conf
+LABEL os="alpine"
+COPY ./entrypoint.sh /tmp/entrypoint.sh
 RUN <<EOF
-  ln -sf /usr/share/zoneinfo/Europe/Brussels /etc/localtime
+  chmod o+x /tmp/entrypoint.sh
+  apk --update -t add keepalived curl iproute2 grep bash tcpdump sed gettext
+  rm -f /var/cache/apk/* /tmp/*
+  rm -f /sbin/halt /sbin/poweroff /sbin/reboot
 EOF
-#USER keepalived
-ENTRYPOINT ["/usr/sbin/keepalived", "--dont-fork", "--log-console", "--log-detail", "--vrrp"]
+COPY ./keepalived.conf.env /etc/keepalived/keepalived.conf.env
+ENTRYPOINT ["/tmp/entrypoint.sh"]
+CMD ["/usr/sbin/keepalived", "--dont-fork", "--log-console", "--log-detail", "--vrrp"]

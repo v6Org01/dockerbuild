@@ -1,7 +1,7 @@
 FROM alpine:latest
 LABEL maintainer="dev_lau11@a.jlv6.com"
 LABEL os="alpine"
-RUN apk --update -t add --no-cache haproxy curl libcap iproute2 tzdata && \
+RUN apk --update -t add --no-cache haproxy curl libcap iproute2 && \
     rm -f /var/cache/apk/* /tmp/* && \
     rm -f /sbin/halt /sbin/poweroff /sbin/reboot
 COPY ./haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
