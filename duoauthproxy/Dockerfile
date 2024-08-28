@@ -7,7 +7,6 @@ RUN <<EOF
   microdnf update -y
   microdnf install tar wget gcc make libffi-devel perl zlib-devel diffutils -y
   ln -sf /sbin/nologin /bin/nologin
-  ln -sf /usr/share/zoneinfo/UTC /etc/localtime
   cd /tmp
   wget -O ./duoauthproxy.tgz --content-disposition https://dl.duosecurity.com/duoauthproxy-latest-src.tgz
   mkdir duoauthproxy
