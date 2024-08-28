@@ -2,7 +2,7 @@ name: haproxy - build_docker_image
 
 env:
   APP: haproxy
-  REGISTRY_IMAGE: ghcr.io/v6Org01/arc-haproxy
+  REGISTRY_IMAGE: ghcr.io/v6org01/arc-haproxy
 
 on:
   workflow_dispatch:

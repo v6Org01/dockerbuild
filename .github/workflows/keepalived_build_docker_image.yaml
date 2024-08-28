@@ -2,7 +2,7 @@ name: keepalived - build_docker_image
 
 env:
   APP: keepalived
-  REGISTRY_IMAGE: ghcr.io/v6Org01/arc-keepalived
+  REGISTRY_IMAGE: ghcr.io/v6org01/arc-keepalived
 
 on:
   workflow_dispatch:
