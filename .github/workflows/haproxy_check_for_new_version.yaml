@@ -27,6 +27,7 @@ jobs:
           context: "{{defaultContext}}:${{ env.APP }}"
           file: DockerfileVersion
           push: false
+          load: true  # automatically loads the single-platform build result to docker images (for use in next step).
           cache-from: type=gha,scope=build-${{ env.APP }}-${{ runner.arch }}
           cache-to: type=gha,mode=max,scope=build-${{ env.APP }}-${{ runner.arch }}
           tags: version-image:latest
