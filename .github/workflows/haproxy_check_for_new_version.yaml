@@ -27,7 +27,7 @@ jobs:
           context: "{{defaultContext}}:${{ env.GIT_SUBDIR }}"
           file: DockerfileVersion
           push: false
-          cache-from: type-gha,scope=build-${{ env.APP }}-${{ runner.arch }}
+          cache-from: type=gha,scope=build-${{ env.APP }}-${{ runner.arch }}
           cache-to: type=gha,mode=max,scope=build-${{ env.APP }}-${{ runner.arch }}
           tags: version-image:latest
       - name: Run container
