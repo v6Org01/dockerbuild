@@ -90,7 +90,7 @@ jobs:
     needs: build-merge
     uses: v6Org01/k8s/.github/workflows/reusableDeployApp.yaml@main
     with:
-      APP: ${{ env.APP }} 
+      APP: duoauthproxy # does not accept env.
       VERSION: ${{ vars.DUO_VERSION }}
       NAMESPACE: core
     secrets:
