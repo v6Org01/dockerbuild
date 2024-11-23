@@ -1,0 +1,29 @@
+name: alpine-noroot_build_push
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+
+  build-image-push:
+    uses: v6Org01/.github/.github/workflows/buildPushImage.yaml@main
+    with:
+      APPLICATION: alpine-noroot
+      BUILD_ARGS: |
+        REGISTRY=${{ vars.REGISTRY_PRIVATE_PULL }}
+        DEFAULT_GID=${{ vars.DEFAULT_GID }}
+        DEFAULT_GROUP=${{ vars.DEFAULT_GROUP }}
+        DEFAULT_UID=${{ vars.DEFAULT_UID }}
+        DEFAULT_USER=${{ vars.DEFAULT_USER }}
+      PUSH_TO_PUBLIC: false
+      PUSH_TO_PRIVATE: true
+      REGISTRY_PRIVATE: ${{ vars.REGISTRY_PRIVATE }}
+      REGISTRY_PRIVATE_PULL: ${{ vars.REGISTRY_PRIVATE_PULL }}
+      VERSION: latest
+    secrets:
+      REGISTRY_PRIVATE_USER: ${{ secrets.REGISTRY_PRIVATE_USER01 }}
+      REGISTRY_PRIVATE_PASSWD: "${{ secrets.REGISTRY_PRIVATE_USER01_PASSWD }}"
