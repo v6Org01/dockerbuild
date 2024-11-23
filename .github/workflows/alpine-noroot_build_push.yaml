@@ -19,7 +19,7 @@ jobs:
         DEFAULT_GROUP=${{ vars.DEFAULT_GROUP }}
         DEFAULT_UID=${{ vars.DEFAULT_UID }}
         DEFAULT_USER=${{ vars.DEFAULT_USER }}
-      CONTEXT: ./alpine-noroot
+      CONTEXT: "{{defaultContext}}:alpine-noroot"
       PUSH_TO_PUBLIC: false
       PUSH_TO_PRIVATE: true
       REGISTRY_PRIVATE: ${{ vars.REGISTRY_PRIVATE }}
