@@ -1,0 +1,115 @@
+name: build-push-opentelemetry-network-build-tools
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: ["trigger-wf-pushImage2Registry-OPENTELEMETRY_NETWORK_BUILD_TOOLS"]
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+env:
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  DOCKER_REGISTRY: ${{ vars.REGISTRY_PRIVATE }}
+  IMAGE_PREFIX: "opentelemetry-network-" 
+
+jobs:
+  build-image-push-private:
+    strategy:
+      matrix:
+        platform:
+          - amd64
+          - arm64
+        include:
+          - platform: amd64
+            runner: gha-runner-scale-set-amd64
+          - platform: arm64
+            runner: gha-runner-scale-set-arm64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Log-in to container registry
+        run: |
+          docker login --username="$DOCKER_USERNAME" --password-stdin $DOCKER_REGISTRY <<< "$DOCKER_PASSWORD"
+      - name: Checkout sources
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          fetch-depth: 0
+          submodules: recursive
+          path: src
+      - name: Compute version numbers
+        run: |
+          # sets environment variables for use in later steps.
+          # see https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-environment-variable
+
+          cd $GITHUB_WORKSPACE/src
+
+          git_short_hash=$(git rev-parse --short=8 HEAD)
+
+          echo "git_short_hash=${git_short_hash}" >> "$GITHUB_ENV"
+      - name: Output build information
+        run: |
+          echo "github.workspace = ${{ github.workspace }}"
+          echo "github.ref = ${{ github.ref }}"
+          echo "inputs.image_prefix = ${{ inputs.image_prefix }}"
+          echo "git_short_hash = ${git_short_hash}"
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential
+      - name: Build build-env container
+        run: |
+          ## cd $GITHUB_WORKSPACE/src
+          ## ./build.sh
+
+      - name: Push to container registry
+        run: |
+          cd $GITHUB_WORKSPACE/src
+
+          tags=(
+            latest
+            git-${git_short_hash}
+          )
+
+          if [[ "${{ inputs.additional_tag }}" != "" ]]; then
+            tags=(${tags[@]} "${{ inputs.additional_tag }}")
+          fi
+
+          # strip potential "https://" prefix and trailing slashes from docker registry
+          docker_registry=$(sed -e 's,^https://,,' -e 's,/*$,,' <<< $DOCKER_REGISTRY)
+
+          image="build-env"
+          image_name="${IMAGE_PREFIX}build-tools"
+          image_path="${docker_registry}/${image_name}"
+
+          for tag in ${tags[@]}; do
+            docker tag $image ${image_path}:${tag}
+            if [[ "${{ inputs.dry_run }}" == "false" ]]; then
+              docker push ${image_path}:${tag}
+            fi
+          done
+
+          docker images --no-trunc
+
+jobs:
+
+  build-image-push:
+    uses: v6Org01/.github/.github/workflows/buildPushImage.yaml@main
+    with:
+      APPLICATION: opentelemetry-network-build-tools
+      BUILD_ARGS: |
+        REGISTRY=${{ vars.REGISTRY_PRIVATE_PULL }}
+      PUSH_TO_PUBLIC: false
+      PUSH_TO_PRIVATE: true
+      OWNER: ${{ vars.OWNER }}
+      REGISTRY_PRIVATE: ${{ vars.REGISTRY_PRIVATE }}
+      REGISTRY_PRIVATE_PULL: ${{ vars.REGISTRY_PRIVATE_PULL }}
+      REGISTRY_PUBLIC: ${{ vars.REGISTRY_PUBLIC }}
+      VERSION: ${{ vars.DUO_VERSION }}
+    secrets:
+      REGISTRY_PRIVATE_USER: ${{ secrets.REGISTRY_PRIVATE_USER01 }}
+      REGISTRY_PRIVATE_PASSWD: "${{ secrets.REGISTRY_PRIVATE_USER01_PASSWD }}"
+      REGISTRY_PUBLIC_USER: ${{ github.actor }}
+      REGISTRY_PUBLIC_PASSWD: ${{ secrets.PAT_PACKAGES }}
